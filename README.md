@@ -1,1 +1,2 @@
-# csharp-getgud-sdk
+# c-getgud-sdk
+C SDK for Getgud
