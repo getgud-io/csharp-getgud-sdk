@@ -7,278 +7,143 @@ using System.Threading.Tasks;
 
 namespace GetGudSdk
 {
-    class SDKWrapper {
-        //cSharp-production\examples\Starter_cSharp_dll\bin\Debug\net6.0\Starter_cSharp_dll.exe
-        const string dllPath = "..\\..\\..\\..\\..\\lib\\GetGudSdk.dll";
-
-        [DllImport(dllPath)]
-        public static extern int init();
-
-        [DllImport(dllPath)]
-        public static extern int StartGame(ref StartGameInfoWrapper gameInfo, out IntPtr gameGuidOut);
-
-        [DllImport(dllPath)]
-        public static extern int StartMatch(ref StartMatchInfoWrapper matchInfo, out IntPtr matchGuidOut);
-
-        [DllImport(dllPath)]
-        public static extern int MarkEndGame(IntPtr matchGuid, int matchGuidSize);
-
-        [DllImport(dllPath)]
-        public static extern int SendAttackAction(ref BaseActionDataWrapper matchInfo, IntPtr weaponGuid, int weaponGuidSize);
-
-        [DllImport(dllPath)]
-        public static extern int SendDamageAction(ref BaseActionDataWrapper matchInfo, IntPtr victimPlayerGuid, int victimPlayerGuidSize,
-            float damageDone, IntPtr weaponGuid, int weaponGuidSize);
-
-        [DllImport(dllPath)]
-        public static extern int SendHealAction(ref BaseActionDataWrapper matchInfo, float healthGained);
-
-        [DllImport(dllPath)]
-        public static extern int SendSpawnAction(ref BaseActionDataWrapper matchInfo, IntPtr characterGuid, int characterGuidGuidSize,
-            int teamId, float initialHealth, PositionF position, RotationF rotation);
-
-        [DllImport(dllPath)]
-        public static extern int SendDeathAction(ref BaseActionDataWrapper matchInfo);
-
-        [DllImport(dllPath)]
-        public static extern int SendPositionAction(ref BaseActionDataWrapper matchInfo, PositionF position, RotationF rotation);
-
-        [DllImport(dllPath)]
-        public static extern int SendInMatchReport(ref ReportInfoWrapper reportInfo);
-
-        [DllImport(dllPath)]
-        public static extern int SendChatMessage(ref ChatMessageWrapper messageInfo);
-
-        [DllImport(dllPath)]
-        public static extern int SendReport(int titleId,
-        IntPtr privateKey, int privateKeySize, ref ReportInfoWrapper report);
-
-        [DllImport(dllPath)]
-        public static extern int UpdatePlayer(int titleId,
-        IntPtr privateKey, int privateKeySize, ref PlayerInfoWrapper report);
-
-        [DllImport(dllPath)]
-        public static extern void dispose();
-
-        public enum Actions { None, Attack, Damage, Death, Heal, Position, Spawn };
-
-        public struct PositionF
-        {
-            public float X;
-            public float Y;
-            public float Z;
-        };
-
-        public struct RotationF
-        {
-            public float Yaw;
-            public float Pitch;
-            public float Roll;
-        };
-
-        public struct StartGameInfoWrapper
-        {
-            public int titleId;
-            public IntPtr privateKey;
-            public int privateKeySize;
-            public IntPtr serverGuid;
-            public int serverGuidSize;
-            public IntPtr gameMode;
-            public int gameModeSize;
-        }
-
-        public struct StartMatchInfoWrapper
-        {
-            public IntPtr gameGuid;
-            public int gameGuidSize;
-            public IntPtr matchMode;
-            public int matchModeSize;
-            public IntPtr mapName;
-            public int mapNameSize;
-        };
-
-        public struct ChatMessageWrapper
-        {
-            public long messageTimeEpoch;
-            public IntPtr matchGuid;
-            public int matchGuidSize;
-            public IntPtr playerGuid;
-            public int playerGuidSize;
-            public IntPtr message;
-            public int messageSize;
-        };
-
-        public struct PlayerInfoWrapper
-        {
-            public IntPtr playerGuid;
-            public int playerGuidSize;
-            public IntPtr playerNickname;
-            public int playerNicknameSize;
-            public IntPtr playerEmail;
-            public int playerEmailSize;
-            public int playerRank;
-            public long playerJoinDateEpoch;
-        };
-
-        public struct ReportInfoWrapper
-        {
-            public IntPtr matchGuid;
-            public int matchGuidSize;
-            public IntPtr reporterName;
-            public int reporterNameSize;
-            public int reporterType;
-            public int reporterSubType;
-            public IntPtr suspectedPlayerGuid;
-            public int suspectedPlayerGuidSize;
-            public int tbType;
-            public long tbTimeEpoch;
-            public int suggestedToxicityScore;
-            public long reportedTimeEpoch;
-        };
-
-        public struct BaseActionDataWrapper
-        {
-            public long actionTimeEpoch;
-            public IntPtr matchGuid;
-            public int matchGuidSize;
-            public IntPtr playerGuid;
-            public int playerGuidSize;
-        }
-        public struct SendAttackActionWrapper
-        {
-            public BaseActionDataWrapper baseData;
-            public IntPtr weaponGuid;
-            public int weaponGuidSize;
-        }
-        public struct SendDamageActionWrapper
-        {
-            public BaseActionDataWrapper baseData;
-            public IntPtr victimPlayerGuid;
-            public int victimPlayerGuidSize;
-            public float damageDone;
-            public IntPtr weaponGuid;
-            public int weaponGuidSize;
-        }
-
-        public struct SendHealActionWrapper
-        {
-            public BaseActionDataWrapper baseData;
-            public float healthGained;
-        }
-
-        public struct SendSpawnActionWrapper
-        {
-            public BaseActionDataWrapper baseData;
-            public IntPtr characterGuid;
-            public int characterGuidSize;
-            public int teamId;
-            public float initialHealth;
-            public PositionF position;
-            public RotationF rotation;
-        }
-
-        public struct SendPositionActionWrapper
-        {
-            public BaseActionDataWrapper baseData;
-            public PositionF position;
-            public RotationF rotation;
-        }
-        public struct BaseActionData
-        {
-            public long actionTimeEpoch;
-            public string matchGuid;
-            public string playerGuid;
-        }
-        public struct SendAttackActionInfo
-        {
-            public BaseActionData baseData;
-            public string weaponGuid;
-        }
-        public struct SendDamageActionInfo
-        {
-            public BaseActionData baseData;
-            public string victimPlayerGuid;
-            public float damageDone;
-            public string weaponGuid;
-        }
-
-        public struct SendHealActionInfo
-        {
-            public BaseActionData baseData;
-            public float healthGained;
-        }
-
-        public struct SendSpawnActionInfo
-        {
-            public BaseActionData baseData;
-            public string characterGuid;
-            public int teamId;
-            public float initialHealth;
-            public PositionF position;
-            public RotationF rotation;
-        }
-
-        public struct SendPositionActionInfo
-        {
-            public BaseActionData baseData;
-            public PositionF position;
-            public RotationF rotation;
-        }
-
-        public struct StartGameInfo
-        {
-            public int TitleId;
-            public string PrivateKey;
-            public string ServerGuid;
-            public string GameMode;
-        }
-        public struct StartMatchInfo
-        {
-            public string gameGuid;
-            public string matchMode;
-            public string mapName;
-        };
-        public struct ChatMessageInfo
-        {
-            public long messageTimeEpoch;
-            public string matchGuid;
-            public string playerGuid;
-            public string message;
-        };
-
-        public struct PlayerInfo
-        {
-            public string playerGuid;
-            public string playerNickname;
-            public string playerEmail;
-            public int playerRank;
-            public long playerJoinDateEpoch;
-        };
-
-        public struct ReportInfo
-        {
-            public string matchGuid;
-            public string reporterName;
-            public int reporterType;
-            public int reporterSubType;
-            public string suspectedPlayerGuid;
-            public int tbType;
-            public long tbTimeEpoch;
-            public int suggestedToxicityScore;
-            public long reportedTimeEpoch;
-        };
-    }
-
-    class GetGudSdk
+    public struct BaseActionData
     {
+        public long actionTimeEpoch;
+        public string matchGuid;
+        public string playerGuid;
+    };
+    public struct SendAffectActionInfo
+    {
+        public BaseActionData baseData;
+        public string affectGuid;
+        public AffectState affectState;
+    };
+    public struct SendAttackActionInfo
+    {
+        public BaseActionData baseData;
+        public string weaponGuid;
+    };
+    public struct SendDamageActionInfo
+    {
+        public BaseActionData baseData;
+        public string victimPlayerGuid;
+        public float damageDone;
+        public string weaponGuid;
+    };
+
+    public struct SendHealActionInfo
+    {
+        public BaseActionData baseData;
+        public float healthGained;
+    };
+
+    public struct SendSpawnActionInfo
+    {
+        public BaseActionData baseData;
+        public string characterGuid;
+        public int teamId;
+        public float initialHealth;
+        public PositionF position;
+        public RotationF rotation;
+    };
+
+    public struct SendPositionActionInfo
+    {
+        public BaseActionData baseData;
+        public PositionF position;
+        public RotationF rotation;
+    };
+
+    public struct StartGameInfo
+    {
+        public int TitleId;
+        public string PrivateKey;
+        public string ServerGuid;
+        public string GameMode;
+    };
+    public struct StartMatchInfo
+    {
+        public string gameGuid;
+        public string matchMode;
+        public string mapName;
+    };
+    public struct ChatMessageInfo
+    {
+        public long messageTimeEpoch;
+        public string matchGuid;
+        public string playerGuid;
+        public string message;
+    };
+
+    public struct PlayerInfo
+    {
+        public string playerGuid;
+        public string playerNickname;
+        public string playerEmail;
+        public int playerRank;
+        public long playerJoinDateEpoch;
+        public PlayerInfo(string playerGuid,
+                          string playerNickname = "",
+                          string playerEmail = "",
+                          int playerRank = -1,
+                          long playerJoinDateEpoch = -1)
+        {
+            this.playerGuid = playerGuid;
+            this.playerNickname = playerNickname;
+            this.playerEmail = playerEmail;
+            this.playerRank = playerRank;
+            this.playerJoinDateEpoch = playerJoinDateEpoch;
+        }
+    };
+
+    public struct ReportInfo
+    {
+        public string matchGuid;
+        public string reporterName;
+        public int reporterType;
+        public int reporterSubType;
+        public string suspectedPlayerGuid;
+        public int tbType;
+        public long tbTimeEpoch;
+        public int suggestedToxicityScore;
+        public long reportedTimeEpoch;
+        public ReportInfo(
+            string matchGuid,
+            long reportedTimeEpoch,
+            string suspectedPlayerGuid,
+            string reporterName = "",
+            int reporterType = -1,
+            int reporterSubType = -1,
+            int tbType = -1,
+            long tbTimeEpoch = -1,
+            int suggestedToxicityScore = -1
+            )
+        {
+            this.matchGuid = matchGuid;
+            this.reporterName = reporterName;
+            this.reporterType = reporterType;
+            this.reporterSubType = reporterSubType;
+            this.suspectedPlayerGuid = suspectedPlayerGuid;
+            this.tbType = tbType;
+            this.tbTimeEpoch = tbTimeEpoch;
+            this.suggestedToxicityScore = suggestedToxicityScore;
+            this.reportedTimeEpoch = reportedTimeEpoch;
+
+        }
+    };
+
+    static internal class Methods
+    {
+#pragma warning disable CS8601, CS0649
         /**
         * Init:
         *
         * Init Getgud SDK
         **/
-        public int Init()
+        static public int Init()
         {
-            return SDKWrapper.init();
+            return GetGudSdk_calls.GetGudSdk_calls.init();
         }
 
         /**
@@ -287,10 +152,10 @@ namespace GetGudSdk
          * Start new game
          * Returns size
          **/
-        public int StartGame(SDKWrapper.StartGameInfo info, out string gameGuidOut)
+        static public int StartGame(StartGameInfo info, out string gameGuidOut)
         {
             // convert managed struct to unmanaged struct
-            var unmanagedInfo = new SDKWrapper.StartGameInfoWrapper
+            var unmanagedInfo = new GetGudSdk_calls.GetGudSdk_calls.StartGameInfoWrapper
             {
                 titleId = info.TitleId,
                 privateKey = Marshal.StringToHGlobalAnsi(info.PrivateKey),
@@ -302,11 +167,17 @@ namespace GetGudSdk
             };
 
             // call unmanaged function
-            IntPtr gameGuidOutPtr = Marshal.AllocHGlobal(32); ;
-            var result = SDKWrapper.StartGame(ref unmanagedInfo, out gameGuidOutPtr);
+            IntPtr gameGuidOutPtr = Marshal.AllocHGlobal(36);
+            var result = GetGudSdk_calls.GetGudSdk_calls.StartGame(ref unmanagedInfo, gameGuidOutPtr);
 
-            // convert unmanaged string (char*) to managed string
-            gameGuidOut = Marshal.PtrToStringAnsi(gameGuidOutPtr);
+            if (gameGuidOutPtr == IntPtr.Zero || result == 0)
+            {
+                gameGuidOut = "";
+            }
+            else
+            {
+                gameGuidOut = Marshal.PtrToStringAnsi(gameGuidOutPtr, result);
+            }
 
             // free unmanaged memory
             Marshal.FreeHGlobal(unmanagedInfo.privateKey);
@@ -322,9 +193,9 @@ namespace GetGudSdk
          *
          * Start a new match for an existing game
          **/
-        public int StartMatch(SDKWrapper.StartMatchInfo info, out string matchGuidOut)
+        static public int StartMatch(StartMatchInfo info, out string matchGuidOut)
         {
-            var unmanagedInfo = new SDKWrapper.StartMatchInfoWrapper
+            var unmanagedInfo = new GetGudSdk_calls.GetGudSdk_calls.StartMatchInfoWrapper
             {
                 gameGuid = Marshal.StringToHGlobalAnsi(info.gameGuid),
                 gameGuidSize = info.gameGuid.Length,
@@ -335,11 +206,17 @@ namespace GetGudSdk
             };
 
             // call unmanaged function
-            IntPtr matchGuidOutPtr = Marshal.AllocHGlobal(32);
-            var result = SDKWrapper.StartMatch(ref unmanagedInfo, out matchGuidOutPtr);
+            IntPtr matchGuidOutPtr = Marshal.AllocHGlobal(36);
+            var result = GetGudSdk_calls.GetGudSdk_calls.StartMatch(ref unmanagedInfo, matchGuidOutPtr);
 
-            // convert unmanaged string (char*) to managed string
-            matchGuidOut = Marshal.PtrToStringAnsi(matchGuidOutPtr);
+            if (matchGuidOutPtr == IntPtr.Zero || result == 0)
+            {
+                matchGuidOut = "";
+            }
+            else
+            {
+                matchGuidOut = Marshal.PtrToStringAnsi(matchGuidOutPtr, result);
+            }
 
             // free unmanaged memory
             Marshal.FreeHGlobal(unmanagedInfo.gameGuid);
@@ -355,10 +232,10 @@ namespace GetGudSdk
          *
          * Mark started game as finished
          **/
-        public int MarkEndGame(string gameGuid)
+        static public int MarkEndGame(string gameGuid)
         {
             var unmanagedGameGuid = Marshal.StringToHGlobalAnsi(gameGuid);
-            var result = SDKWrapper.MarkEndGame(unmanagedGameGuid, gameGuid.Length);
+            var result = GetGudSdk_calls.GetGudSdk_calls.MarkEndGame(unmanagedGameGuid, gameGuid.Length);
 
             Marshal.FreeHGlobal(unmanagedGameGuid);
 
@@ -366,13 +243,13 @@ namespace GetGudSdk
         }
 
         /**
-         * SendAttackAction:
+         * SendAffectAction:
          *
          **/
-        public int SendAttackAction(SDKWrapper.SendAttackActionInfo info)
+        static public int SendAffectkAction(SendAffectActionInfo info)
         {
-            var unmanagedWeaponGuid = Marshal.StringToHGlobalAnsi(info.weaponGuid);
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedWeaponGuid = Marshal.StringToHGlobalAnsi(info.affectGuid);
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.baseData.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
@@ -381,7 +258,32 @@ namespace GetGudSdk
                 playerGuidSize = info.baseData.playerGuid.Length
             };
 
-            var result = SDKWrapper.SendAttackAction(ref unmanagedBaseData, unmanagedWeaponGuid, info.weaponGuid.Length);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendAffectAction(ref unmanagedBaseData, unmanagedWeaponGuid, info.affectGuid.Length, info.affectState);
+
+            Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
+            Marshal.FreeHGlobal(unmanagedWeaponGuid);
+
+            return result;
+        }
+
+        /**
+         * SendAttackAction:
+         *
+         **/
+        static public int SendAttackAction(SendAttackActionInfo info)
+        {
+            var unmanagedWeaponGuid = Marshal.StringToHGlobalAnsi(info.weaponGuid);
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
+            {
+                actionTimeEpoch = info.baseData.actionTimeEpoch,
+                matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
+                matchGuidSize = info.baseData.matchGuid.Length,
+                playerGuid = Marshal.StringToHGlobalAnsi(info.baseData.playerGuid),
+                playerGuidSize = info.baseData.playerGuid.Length
+            };
+
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendAttackAction(ref unmanagedBaseData, unmanagedWeaponGuid, info.weaponGuid.Length);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
@@ -394,10 +296,10 @@ namespace GetGudSdk
          * SendDamageAction:
          *
          **/
-        public int SendDamageAction(SDKWrapper.SendDamageActionInfo info)
+        static public int SendDamageAction(SendDamageActionInfo info)
         {
 
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.baseData.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
@@ -412,10 +314,12 @@ namespace GetGudSdk
             IntPtr weaponGuid = Marshal.StringToHGlobalAnsi(info.weaponGuid);
             int weaponGuidSize = info.weaponGuid.Length;
 
-            var result = SDKWrapper.SendDamageAction(ref unmanagedBaseData, victimPlayerGuid, victimPlayerGuidSize, info.damageDone, weaponGuid, weaponGuidSize);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendDamageAction(ref unmanagedBaseData, victimPlayerGuid, victimPlayerGuidSize, info.damageDone, weaponGuid, weaponGuidSize);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
+            Marshal.FreeHGlobal(victimPlayerGuid);
+            Marshal.FreeHGlobal(weaponGuid);
 
             return result;
         }
@@ -424,9 +328,9 @@ namespace GetGudSdk
          * SendHealAction:
          *
          **/
-        public int SendHealAction(SDKWrapper.SendHealActionInfo info)
+        static public int SendHealAction(SendHealActionInfo info)
         {
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.baseData.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
@@ -435,7 +339,7 @@ namespace GetGudSdk
                 playerGuidSize = info.baseData.playerGuid.Length
             };
 
-            var result = SDKWrapper.SendHealAction(ref unmanagedBaseData, info.healthGained);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendHealAction(ref unmanagedBaseData, info.healthGained);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
@@ -447,9 +351,9 @@ namespace GetGudSdk
          * SendSpawnAction:
          *
          **/
-        public int SendSpawnAction(SDKWrapper.SendSpawnActionInfo info)
+        static public int SendSpawnAction(SendSpawnActionInfo info)
         {
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.baseData.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
@@ -461,11 +365,12 @@ namespace GetGudSdk
             IntPtr characterGuid = Marshal.StringToHGlobalAnsi(info.characterGuid);
             int characterGuidSize = info.characterGuid.Length;
 
-            var result = SDKWrapper.SendSpawnAction(ref unmanagedBaseData, characterGuid, characterGuidSize, info.teamId, info.initialHealth,
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendSpawnAction(ref unmanagedBaseData, characterGuid, characterGuidSize, info.teamId, info.initialHealth,
                 info.position, info.rotation);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
+            Marshal.FreeHGlobal(characterGuid);
 
             return result;
         }
@@ -474,9 +379,9 @@ namespace GetGudSdk
          * SendDeathAction:
          *
          **/
-        public int SendDeathAction(SDKWrapper.BaseActionData info)
+        static public int SendDeathAction(BaseActionData info)
         {
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.matchGuid),
@@ -485,7 +390,7 @@ namespace GetGudSdk
                 playerGuidSize = info.playerGuid.Length
             };
 
-            var result = SDKWrapper.SendDeathAction(ref unmanagedBaseData);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendDeathAction(ref unmanagedBaseData);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
@@ -497,9 +402,9 @@ namespace GetGudSdk
          * SendPositionAction:
          *
          **/
-        public int SendPositionAction(SDKWrapper.SendPositionActionInfo info)
+        static public int SendPositionAction(SendPositionActionInfo info)
         {
-            var unmanagedBaseData = new SDKWrapper.BaseActionDataWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.BaseActionDataWrapper
             {
                 actionTimeEpoch = info.baseData.actionTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.baseData.matchGuid),
@@ -508,7 +413,7 @@ namespace GetGudSdk
                 playerGuidSize = info.baseData.playerGuid.Length
             };
 
-            var result = SDKWrapper.SendPositionAction(ref unmanagedBaseData, info.position, info.rotation);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendPositionAction(ref unmanagedBaseData, info.position, info.rotation);
 
             Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
             Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
@@ -520,9 +425,9 @@ namespace GetGudSdk
          *
          * Send a report which belongs to specifc match which is now live
          **/
-        public int SendInMatchReport(SDKWrapper.ReportInfo info)
+        static public int SendInMatchReport(ReportInfo info)
         {
-            var unmanagedBaseData = new SDKWrapper.ReportInfoWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.ReportInfoWrapper
             {
                 matchGuid = Marshal.StringToHGlobalAnsi(info.matchGuid),
                 matchGuidSize = info.matchGuid.Length,
@@ -538,9 +443,11 @@ namespace GetGudSdk
                 reportedTimeEpoch = info.reportedTimeEpoch
             };
 
-            var result = SDKWrapper.SendInMatchReport(ref unmanagedBaseData);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendInMatchReport(ref unmanagedBaseData);
 
-            //delete pointers
+            Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.reporterName);
+            Marshal.FreeHGlobal(unmanagedBaseData.suspectedPlayerGuid);
 
             return result;
         }
@@ -550,9 +457,9 @@ namespace GetGudSdk
          *
          *  Send a message which belongs to specifc match which is now live
          **/
-        public int SendChatMessage(SDKWrapper.ChatMessageInfo info)
+        static public int SendChatMessage(ChatMessageInfo info)
         {
-            var unmanagedBaseData = new SDKWrapper.ChatMessageWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.ChatMessageWrapper
             {
                 messageTimeEpoch = info.messageTimeEpoch,
                 matchGuid = Marshal.StringToHGlobalAnsi(info.matchGuid),
@@ -563,9 +470,11 @@ namespace GetGudSdk
                 messageSize = info.message.Length
             };
 
-            var result = SDKWrapper.SendChatMessage(ref unmanagedBaseData);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendChatMessage(ref unmanagedBaseData);
 
-            //delete pointers
+            Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.message);
 
             return result;
         }
@@ -575,14 +484,14 @@ namespace GetGudSdk
          *
          * Send report which are outside of the live match
          **/
-        public int SendReport(int titleId,
-          string privateKey, SDKWrapper.ReportInfo report)
+        static public int SendReport(int titleId,
+          string privateKey, ReportInfo report)
         {
 
             IntPtr privateKeyPtr = Marshal.StringToHGlobalAnsi(privateKey);
             int privateKeySize = privateKey.Length;
 
-            var unmanagedBaseData = new SDKWrapper.ReportInfoWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.ReportInfoWrapper
             {
                 matchGuid = Marshal.StringToHGlobalAnsi(report.matchGuid),
                 matchGuidSize = report.matchGuid.Length,
@@ -598,9 +507,12 @@ namespace GetGudSdk
                 reportedTimeEpoch = report.reportedTimeEpoch
             };
 
-            var result = SDKWrapper.SendReport(titleId, privateKeyPtr, privateKeySize, ref unmanagedBaseData);
+            var result = GetGudSdk_calls.GetGudSdk_calls.SendReport(titleId, privateKeyPtr, privateKeySize, ref unmanagedBaseData);
 
-            //delete pointers
+            Marshal.FreeHGlobal(privateKeyPtr);
+            Marshal.FreeHGlobal(unmanagedBaseData.matchGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.reporterName);
+            Marshal.FreeHGlobal(unmanagedBaseData.suspectedPlayerGuid);
 
             return result;
 
@@ -611,14 +523,14 @@ namespace GetGudSdk
          *
          * Update player info outside of the live match
          **/
-        public int UpdatePlayer(int titleId,
-        string privateKey, SDKWrapper.PlayerInfo player)
+        static public int UpdatePlayer(int titleId,
+        string privateKey, PlayerInfo player)
         {
 
             IntPtr privateKeyPtr = Marshal.StringToHGlobalAnsi(privateKey);
             int privateKeySize = privateKey.Length;
 
-            var unmanagedBaseData = new SDKWrapper.PlayerInfoWrapper
+            var unmanagedBaseData = new GetGudSdk_calls.GetGudSdk_calls.PlayerInfoWrapper
             {
                 playerGuid = Marshal.StringToHGlobalAnsi(player.playerGuid),
                 playerGuidSize = player.playerGuid.Length,
@@ -630,22 +542,26 @@ namespace GetGudSdk
                 playerJoinDateEpoch = player.playerJoinDateEpoch
             };
 
-            var result = SDKWrapper.UpdatePlayer(titleId, privateKeyPtr, privateKeySize, ref unmanagedBaseData);
+            var result = GetGudSdk_calls.GetGudSdk_calls.UpdatePlayer(titleId, privateKeyPtr, privateKeySize, ref unmanagedBaseData);
 
-            //delete pointers
+            Marshal.FreeHGlobal(privateKeyPtr);
+            Marshal.FreeHGlobal(unmanagedBaseData.playerGuid);
+            Marshal.FreeHGlobal(unmanagedBaseData.playerNickname);
+            Marshal.FreeHGlobal(unmanagedBaseData.playerEmail);
 
             return result;
         }
-        
+
         /**
          * Dispose:
          *
          **/
-        public void dispose()
+        static public void dispose()
         {
-            SDKWrapper.dispose();
+            GetGudSdk_calls.GetGudSdk_calls.dispose();
         }
-        
+
+#pragma warning restore CS8601, CS0649
     }
 
 }
