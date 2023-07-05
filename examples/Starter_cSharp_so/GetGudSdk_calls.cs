@@ -155,9 +155,9 @@ namespace GetGudSdk_calls
 		// Linux build path
         //sdk_project\tests\Starter_cSharp_so\bin\Debug\net7.0\linux-64\
 		//
-		// Windows deploy path
-		//examples\Starter_cSharp_dll\bin\Debug\net7.0\
-        const string dllPath = "../../../../../lib/libGetGudSdk.so";
+		// Linux deploy path
+		//examples\Starter_cSharp_so\bin\Debug\net7.0\linux-64\
+        const string dllPath = "../../../../../../lib/libGetGudSdk.so";
 
 
         [DllImport(dllPath)]
